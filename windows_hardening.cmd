@@ -329,7 +329,6 @@ Netsh.exe advfirewall firewall add rule name="Block makecab.exe netconns" progra
 Netsh.exe advfirewall firewall add rule name="Block replace.exe netconns" program="%systemroot%\system32\replace.exe" protocol=tcp dir=out enable=yes action=block profile=any
 Netsh.exe advfirewall firewall add rule name="Block replace.exe netconns" program="%systemroot%\SysWOW64\replace.exe" protocol=tcp dir=out enable=yes action=block profile=any
 Netsh.exe advfirewall firewall add rule name="Block wsl.exe netconns" program="%systemroot%\system32\wsl.exe" protocol=tcp dir=out enable=yes action=block profile=any
-Netsh.exe advfirewall firewall add rule name="Block update.exe netconns" program="%localappdata%\Microsoft\Teams\update.exe" protocol=tcp dir=out enable=yes action=block profile=any
 Netsh.exe advfirewall firewall add rule name="Block Squirrel.exe netconns" program="%localappdata%\Microsoft\Teams\current\Squirrel.exe" protocol=tcp dir=out enable=yes action=block profile=any
 Netsh.exe advfirewall firewall add rule name="Block Excel.exe netconns" program="%ProgramFiles(x86)%\Microsoft Office 16\ClientX86\Root\Office16\Excel.exe" protocol=tcp dir=out enable=yes action=block profile=any
 Netsh.exe advfirewall firewall add rule name="Block Excel.exe netconns" program="%ProgramFiles%\Microsoft Office 16\ClientX64\Root\Office16\Excel.exe" protocol=tcp dir=out enable=yes action=block profile=any
