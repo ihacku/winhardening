@@ -7,7 +7,7 @@ Enabled
 修改为 AuditMode，没实际测过 Enabled。  
 但是目测还是不拦截只记录合适一点，如果想试下开启拦截，可以改回 Enabled。    
 
-* 新增 attack surface reduction 规则  
+* 增加 attack surface reduction 规则  
 Use advanced protection against ransomware  
 Block Office communication application from creating child processes
 
@@ -15,8 +15,8 @@ Block Office communication application from creating child processes
 这个远程桌面有时候要用到挂载本地盘
 
 * Block Win32 binaries from making netconns when they shouldn't  
-增加 SysWOW64 路径  
-参照 https://lolbas-project.github.io/ 增加  
+增加对应文件的 SysWOW64 路径  
+参照 https://lolbas-project.github.io/ 增加其他带下载功能的微软 exe 禁止联网规则  
 Bitsadmin.exe  
 Certutil.exe  
 Esentutl.exe  
@@ -28,7 +28,7 @@ Makecab.exe
 Replace.exe  
 Excel.exe  
 Powerpnt.exe  
-Squirrel.exe 
+Squirrel.exe  
 Winword.exe  
 Wsl.exe  
 
@@ -47,7 +47,7 @@ BCDEDIT /set loadoptions ENABLE_INTEGRITY_CHECKS
 netsh advfirewall set publicprofile firewallpolicy blockinboundalways,allowoutbound  
 为  
 netsh advfirewall set allprofiles firewallpolicy blockinbound,allowoutbound  
-原策略会无视如自定义白名单策略
+原策略会无视如自定义白名单策略  
 profile 有三种，all 对应全部   
 Domain 对应域网络  
 Private 对应专用网络  
