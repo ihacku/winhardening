@@ -197,6 +197,7 @@ reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v ShellSmartScreenLev
 ::
 :: Enforce device driver signing
 BCDEDIT /set nointegritychecks OFF
+BCDEDIT /set loadoptions ENABLE_INTEGRITY_CHECKS
 ::
 :: Windows Update Settings
 :: Prevent Delivery Optimization from downloading Updates from other computers across the internet
@@ -287,7 +288,7 @@ netsh advfirewall set currentprofile logging maxfilesize 4096
 netsh advfirewall set currentprofile logging droppedconnections enable
 ::
 :: Block all inbound connections on Public profile
-netsh advfirewall set publicprofile firewallpolicy blockinboundalways,allowoutbound
+netsh advfirewall set allprofiles firewallpolicy blockinbound,allowoutbound
 :: Enable Windows Defender Network Protection
 powershell.exe Set-MpPreference -EnableNetworkProtection Enabled
 ::
@@ -445,6 +446,59 @@ Auditpol /set /subcategory:"IPsec Driver" /success:enable /failure:enable
 Auditpol /set /subcategory:"Security State Change" /success:enable /failure:enable
 Auditpol /set /subcategory:"Security System Extension" /success:enable /failure:enable
 Auditpol /set /subcategory:"System Integrity" /success:enable /failure:enable
+Auditpol /set /subcategory:"安全组管理" /success:enable /failure:enable
+Auditpol /set /subcategory:"进程创建" /success:enable /failure:enable
+Auditpol /set /subcategory:"注销" /success:enable /failure:disable
+Auditpol /set /subcategory:"登录" /success:enable /failure:enable
+Auditpol /set /subcategory:"筛选平台连接" /success:enable /failure:disable
+Auditpol /set /subcategory:"可移动存储" /success:enable /failure:enable
+Auditpol /set /subcategory:"SAM" /success:disable /failure:disable
+Auditpol /set /subcategory:"筛选平台策略更改" /success:disable /failure:disable
+Auditpol /set /subcategory:"IPsec 驱动程序" /success:enable /failure:enable
+Auditpol /set /subcategory:"安全状态更改" /success:enable /failure:enable
+Auditpol /set /subcategory:"安全系统扩展" /success:enable /failure:enable
+Auditpol /set /subcategory:"系统完整性" /success:enable /failure:enable
+::相对上游新增部分
+auditpol /set /subcategory:"Account Lockout" /success:enable /failure:enable 
+auditpol /set /subcategory:"Special Logon" /success:enable /failure:enable 
+auditpol /set /subcategory:"Other Logon/Logoff Events" /success:enable /failure:enable
+auditpol /set /subcategory:"File System" /success:enable /failure:enable
+auditpol /set /subcategory:"Registry" /success:enable /failure:enable 
+auditpol /set /subcategory:"Other Object Access Events" /success:disable /failure:disable 
+auditpol /set /subcategory:"Sensitive Privilege Use" /success:disable /failure:disable
+auditpol /set /subcategory:"File Share" /success:enable /failure:enable 
+auditpol /set /subcategory:"Process Termination" /success:enable /failure:enable 
+auditpol /set /subcategory:"Audit Policy Change" /success:enable /failure:enable 
+auditpol /set /subcategory:"User Account Management" /success:enable /failure:enable 
+auditpol /set /subcategory:"Computer Account Management" /success:enable /failure:enable 
+auditpol /set /subcategory:"Credential Validation" /success:enable /failure:enable 
+auditpol /set /subcategory:"Kerberos Service Ticket Operations" /success:enable /failure:enable 
+auditpol /set /subcategory:"Other Account Logon Events" /success:enable /failure:enable 
+auditpol /set /subcategory:"Kerberos Authentication Service" /success:enable /failure:enable
+auditpol /set /subcategory:"Token Right Adjustment" /success:enable /failure:enable
+auditpol /set /subcategory:"Network Policy Server" /success:enable /failure:enable
+auditpol /set /subcategory:"RPC Events" /success:enable /failure:enable
+auditpol /set /subcategory:"Group Membership" /success:enable /failure:enable
+auditpol /set /subcategory:"帐户锁定" /success:enable /failure:enable 
+auditpol /set /subcategory:"特殊登录" /success:enable /failure:enable 
+auditpol /set /subcategory:"其他登录/注销事件" /success:enable /failure:enable
+auditpol /set /subcategory:"文件系统" /success:enable /failure:enable
+auditpol /set /subcategory:"注册表" /success:enable /failure:enable 
+auditpol /set /subcategory:"其他对象访问事件" /success:disable /failure:disable 
+auditpol /set /subcategory:"敏感权限使用" /success:disable /failure:disable
+auditpol /set /subcategory:"文件共享" /success:enable /failure:enable 
+auditpol /set /subcategory:"进程终止" /success:enable /failure:enable 
+auditpol /set /subcategory:"审核策略更改" /success:enable /failure:enable 
+auditpol /set /subcategory:"用户帐户管理" /success:enable /failure:enable 
+auditpol /set /subcategory:"计算机帐户管理" /success:enable /failure:enable 
+auditpol /set /subcategory:"凭据验证" /success:enable /failure:enable 
+auditpol /set /subcategory:"Kerberos 服务票证操作" /success:enable /failure:enable 
+auditpol /set /subcategory:"其他帐户登录事件" /success:enable /failure:enable 
+auditpol /set /subcategory:"Kerberos 身份验证服务" /success:enable /failure:enable
+auditpol /set /subcategory:"令牌权限已调整事件" /success:enable /failure:enable
+auditpol /set /subcategory:"网络策略服务器" /success:enable /failure:enable
+auditpol /set /subcategory:"RPC 事件" /success:enable /failure:enable
+auditpol /set /subcategory:"组成员身份" /success:enable /failure:enable
 ::
 ::#######################################################################
 :: Extra settings commented out but worth considering
@@ -501,6 +555,33 @@ Auditpol /set /subcategory:"System Integrity" /success:enable /failure:enable
 :: powershell.exe -command "Get-AppxPackage *SpotifyAB.SpotifyMusic* -AllUsers | Remove-AppxPackage"
 :: powershell.exe -command "Get-AppxPackage *king.com.* -AllUsers | Remove-AppxPackage"
 :: powershell.exe -command "Get-AppxPackage *Microsoft.NET.Native.Framework.1.* -AllUsers | Remove-AppxPackage"
+:: Removed Provisioned Apps
+:: This will prevent these apps from being reinstalled on new user first logon
+:: Obviously I manually chose this list. If you truly want to nuke all the provisioned apps, you can use the below commented command in PowerShell
+:: Get-AppXProvisionedPackage -Online | Remove-AppxProvisionedPackage -Online
+:: powershell.exe -command "Get-AppxProvisionedPackage -Online | Where-Object {$_.DisplayName -eq 'Microsoft.BingWeather'} | Remove-AppxProvisionedPackage -Online"
+:: powershell.exe -command "Get-AppxProvisionedPackage -Online | Where-Object {$_.DisplayName -eq 'Microsoft.GetHelp'} | Remove-AppxProvisionedPackage -Online"
+:: powershell.exe -command "Get-AppxProvisionedPackage -Online | Where-Object {$_.DisplayName -eq 'Microsoft.Getstarted'} | Remove-AppxProvisionedPackage -Online"
+:: powershell.exe -command "Get-AppxProvisionedPackage -Online | Where-Object {$_.DisplayName -eq 'Microsoft.MicrosoftOfficeHub'} | Remove-AppxProvisionedPackage -Online"
+:: powershell.exe -command "Get-AppxProvisionedPackage -Online | Where-Object {$_.DisplayName -eq 'Microsoft.MicrosoftSolitaireCollection'} | Remove-AppxProvisionedPackage -Online"
+:: powershell.exe -command "Get-AppxProvisionedPackage -Online | Where-Object {$_.DisplayName -eq 'Microsoft.MicrosoftStickyNotes'} | Remove-AppxProvisionedPackage -Online"
+:: powershell.exe -command "Get-AppxProvisionedPackage -Online | Where-Object {$_.DisplayName -eq 'Microsoft.MixedReality.Portal'} | Remove-AppxProvisionedPackage -Online"
+:: powershell.exe -command "Get-AppxProvisionedPackage -Online | Where-Object {$_.DisplayName -eq 'Microsoft.Office.OneNote'} | Remove-AppxProvisionedPackage -Online"
+:: powershell.exe -command "Get-AppxProvisionedPackage -Online | Where-Object {$_.DisplayName -eq 'Microsoft.SkypeApp'} | Remove-AppxProvisionedPackage -Online"
+:: powershell.exe -command "Get-AppxProvisionedPackage -Online | Where-Object {$_.DisplayName -eq 'Microsoft.WindowsAlarms'} | Remove-AppxProvisionedPackage -Online"
+:: powershell.exe -command "Get-AppxProvisionedPackage -Online | Where-Object {$_.DisplayName -eq 'Microsoft.WindowsCamera'} | Remove-AppxProvisionedPackage -Online"
+:: powershell.exe -command "Get-AppxProvisionedPackage -Online | Where-Object {$_.DisplayName -eq 'microsoft.windowscommunicationsapps'} | Remove-AppxProvisionedPackage -Online"
+:: powershell.exe -command "Get-AppxProvisionedPackage -Online | Where-Object {$_.DisplayName -eq 'Microsoft.WindowsFeedbackHub'} | Remove-AppxProvisionedPackage -Online"
+:: powershell.exe -command "Get-AppxProvisionedPackage -Online | Where-Object {$_.DisplayName -eq 'Microsoft.WindowsMaps'} | Remove-AppxProvisionedPackage -Online"
+:: powershell.exe -command "Get-AppxProvisionedPackage -Online | Where-Object {$_.DisplayName -eq 'Microsoft.WindowsSoundRecorder'} | Remove-AppxProvisionedPackage -Online"
+:: powershell.exe -command "Get-AppxProvisionedPackage -Online | Where-Object {$_.DisplayName -eq 'Microsoft.XboxApp'} | Remove-AppxProvisionedPackage -Online"
+:: powershell.exe -command "Get-AppxProvisionedPackage -Online | Where-Object {$_.DisplayName -eq 'Microsoft.XboxTCUI'} | Remove-AppxProvisionedPackage -Online"
+:: powershell.exe -command "Get-AppxProvisionedPackage -Online | Where-Object {$_.DisplayName -eq 'Microsoft.XboxGameOverlay'} | Remove-AppxProvisionedPackage -Online"
+:: powershell.exe -command "Get-AppxProvisionedPackage -Online | Where-Object {$_.DisplayName -eq 'Microsoft.XboxGamingOverlay'} | Remove-AppxProvisionedPackage -Online"
+:: powershell.exe -command "Get-AppxProvisionedPackage -Online | Where-Object {$_.DisplayName -eq 'Microsoft.XboxIdentityProvider'} | Remove-AppxProvisionedPackage -Online"
+:: powershell.exe -command "Get-AppxProvisionedPackage -Online | Where-Object {$_.DisplayName -eq 'Microsoft.YourPhone'} | Remove-AppxProvisionedPackage -Online"
+:: powershell.exe -command "Get-AppxProvisionedPackage -Online | Where-Object {$_.DisplayName -eq 'Microsoft.ZuneMusic'} | Remove-AppxProvisionedPackage -Online"
+:: powershell.exe -command "Get-AppxProvisionedPackage -Online | Where-Object {$_.DisplayName -eq 'Microsoft.ZuneVideo'} | Remove-AppxProvisionedPackage -Online"
 ::
 ::#######################################################################
 :: Extra settings commented out but worth considering
