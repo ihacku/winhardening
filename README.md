@@ -54,3 +54,11 @@ Private 对应专用网络
 Public 对应共用网络  
 部分场景下需要添加远程桌面防火墙例外，可以再加一行  
 netsh firewall set service remotedesktop enable  
+
+* 反 mimikatz 相关  
+[参照](https://medium.com/blue-team/preventing-mimikatz-attacks-ed283e7ebdd5)增加  
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest" /v Negotiate /t REG_DWORD /d 0 /f  
+Debug Privilege 需要修改组策略，未添加  
+Restricted Admin Mode 需要远程桌面连接的时候加参数，未添加  
+Credential Caching 需要在域控上配置组策略，未添加  
+Protected Users Group 需要在域控上配置组策略，未添加  
