@@ -61,4 +61,7 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest" /v Neg
 Debug Privilege 需要修改组策略，未添加  
 Restricted Admin Mode 需要远程桌面连接的时候加参数，未添加  
 Credential Caching 需要在域控上配置组策略，未添加  
-Protected Users Group 需要在域控上配置组策略，未添加  
+Protected Users Group 需要在域控上配置组策略，未添加
+
+* SmartScreen 级别从 Block 修改为 Warn  
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v ShellSmartScreenLevel /t REG_SZ /d Warn /f  
