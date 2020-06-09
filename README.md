@@ -2,10 +2,9 @@
 
 基于 https://gist.github.com/mackwage/08604751462126599d7e52f233490efe 修改，待规模测试后提交给上游。
 
-* Block executable files from running unless they meet a prevalence, age, or trusted list criterion
-Enabled   
-修改为 AuditMode，没实际测过 Enabled。  
-但是目测还是不拦截只记录合适一点，如果想试下开启拦截，可以改回 Enabled。    
+* 取消 Block executable files from running unless they meet a prevalence, age, or trusted list criterion
+Enabled 注释，并修改为 AuditMode。没实际测过 Enabled，但是目测还是不拦截只记录合适一点。  
+如果想试下开启拦截，可以改回 Enabled。    
 
 * 增加 attack surface reduction 规则  
 Use advanced protection against ransomware  
@@ -16,7 +15,7 @@ Block Office communication application from creating child processes
 
 * Block Win32 binaries from making netconns when they shouldn't  
 增加对应文件的 SysWOW64 路径  
-参照 https://lolbas-project.github.io/ 增加其他带下载功能的微软 exe 禁止联网规则  
+参照 https://lolbas-project.github.io/ 增加其他带下载功能的系统自带程序禁止联网规则  
 Bitsadmin.exe  
 Certutil.exe  
 Esentutl.exe  
@@ -31,6 +30,7 @@ Powerpnt.exe
 Squirrel.exe  
 Winword.exe  
 Wsl.exe  
+增加 lolbin 中没有的 inseng.dll
 
 * Uninstall common extra apps found on a lot of Win10 installs  
 This will prevent these apps from being reinstalled on new user first logon  
@@ -65,3 +65,10 @@ Protected Users Group 需要在域控上配置组策略，未添加
 
 * SmartScreen 级别从 Block 修改为 Warn  
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v ShellSmartScreenLevel /t REG_SZ /d Warn /f  
+
+* 新增关闭 Windows 默认共享,见 :: Disable Shares
+
+* 取消如下几项注释  
+Enable Windows Defender real time monitoring  
+Restrict privileged local admin tokens being used from network  
+Ensure outgoing secure channel traffic is encrytped  
