@@ -327,6 +327,8 @@ Netsh.exe advfirewall firewall add rule name="Block ieexec.exe netconns" program
 Netsh.exe advfirewall firewall add rule name="Block ieexec.exe netconns" program="%systemroot%\Microsoft.NET\Framework64\v2.0.50727\ieexec.exe" protocol=tcp dir=out enable=yes action=block profile=any
 Netsh.exe advfirewall firewall add rule name="Block makecab.exe netconns" program="%systemroot%\system32\makecab.exe" protocol=tcp dir=out enable=yes action=block profile=any
 Netsh.exe advfirewall firewall add rule name="Block makecab.exe netconns" program="%systemroot%\SysWOW64\makecab.exe" protocol=tcp dir=out enable=yes action=block profile=any
+Netsh.exe advfirewall firewall add rule name="Block inseng.dll netconns" program="%systemroot%\system32\inseng.dll" protocol=tcp dir=out enable=yes action=block profile=any
+Netsh.exe advfirewall firewall add rule name="Block inseng.dll netconns" program="%systemroot%\SysWOW64\inseng.dll" protocol=tcp dir=out enable=yes action=block profile=any
 Netsh.exe advfirewall firewall add rule name="Block replace.exe netconns" program="%systemroot%\system32\replace.exe" protocol=tcp dir=out enable=yes action=block profile=any
 Netsh.exe advfirewall firewall add rule name="Block replace.exe netconns" program="%systemroot%\SysWOW64\replace.exe" protocol=tcp dir=out enable=yes action=block profile=any
 Netsh.exe advfirewall firewall add rule name="Block wsl.exe netconns" program="%systemroot%\system32\wsl.exe" protocol=tcp dir=out enable=yes action=block profile=any
@@ -618,11 +620,11 @@ auditpol /set /subcategory:"组成员身份" /success:enable /failure:enable
 ::
 :: Block executable files from running unless they meet a prevalence, age, or trusted list criterion
 :: This one is commented out for now as I need to research and test more to determine potential impact
-:: powershell.exe Add-MpPreference -AttackSurfaceReductionRules_Ids 01443614-cd74-433a-b99e-2ecdc07bfc25 -AttackSurfaceReductionRules_Actions AuditMode
+powershell.exe Add-MpPreference -AttackSurfaceReductionRules_Ids 01443614-cd74-433a-b99e-2ecdc07bfc25 -AttackSurfaceReductionRules_Actions AuditMode
 ::
 :: Enable Windows Defender real time monitoring
 :: Commented out given consumers often run third party anti-virus. You can run either. 
-:: powershell.exe -command "Set-MpPreference -DisableRealtimeMonitoring $false"
+powershell.exe -command "Set-MpPreference -DisableRealtimeMonitoring $false"
 :: reg add "HKLM\SOFTWARE\Microsoft\Windows Defender\Real-Time Protection" /v DisableRealtimeMonitoring /t REG_DWORD /d 0 /f
 ::
 :: Disable internet connection sharing
@@ -640,15 +642,19 @@ auditpol /set /subcategory:"组成员身份" /success:enable /failure:enable
 ::
 :: Restrict privileged local admin tokens being used from network 
 :: Commented out as it only works on domain-joined assets
-:: reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v LocalAccountTokenFilterPolicy /t REG_DWORD /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v LocalAccountTokenFilterPolicy /t REG_DWORD /d 0 /f
 ::
 :: Ensure outgoing secure channel traffic is encrytped
 :: Commented out as it only works on domain-joined assets
-:: reg add "HKLM\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters" /v RequireSignOrSeal /t REG_DWORD /d 1 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters" /v RequireSignOrSeal /t REG_DWORD /d 1 /f
 ::
 :: Enforce LDAP client signing
 :: Commented out as most consumers don't use LDAP auth
 :: reg add "HKLM\SYSTEM\CurrentControlSet\Services\LDAP" /v LDAPClientIntegrity /t REG_DWORD /d 1 /f
+::
+:: Disable Shares
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v AutoShareServer /t REG_DWORD /d 0 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v AutoShareWks /t REG_DWORD /d 0 /f
 ::
 ::#######################################################################
 :: References
